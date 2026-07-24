@@ -175,6 +175,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
         }
 
         .map-img {
@@ -291,11 +292,11 @@
         </div>
     </div>
 
-    <!-- VIEW 3: MAP MASTER WITH HIGH-RES VECTOR CITY MAP -->
+    <!-- VIEW 3: MAP MASTER WITH PINTEREST MAP IMAGE -->
     <div id="map" class="view">
         <div class="map-section">
             <div class="map-svg-container">
-                <img src="https://i.pinimg.com/736x/4f/7e/f1/4f7ef14208b3f740ac16352816c9b0be.jpg" alt="City Map" class="map-img" onerror="this.src='https://placehold.co/800x500/334155/ffffff?text=City+Map'">
+                <img src="https://i.pinimg.com/736x/4f/7e/f1/4f7ef14208b3f740ac16352816c9b0be.jpg" alt="City Map" class="map-img" onerror="this.src='https://i.pinimg.com/originals/4f/7e/f1/4f7ef14208b3f740ac16352816c9b0be.jpg'">
             </div>
 
             <div class="route-box">
@@ -310,7 +311,7 @@
 </div>
 
 <script>
-    // 25 WORDS & DIRECTIONS (NO BUILDINGS)
+    // 25 DIRECTIONS & PREPOSITIONS ONLY (NO BUILDINGS IN VOCABULARY)
     const words = [
         {en: "crossroads", ru: "перекрёсток"},
         {en: "traffic lights", ru: "светофор"},
@@ -341,22 +342,22 @@
 
     const mapRoutes = [
         {
-            instruction: "Start at the <b>START</b> point. Go straight on. Take the first left on to Green Street. Walk past the library. What is the building next to the library on the left?",
+            instruction: "Start at the <b>START</b> point. Go straight on Green Street. Walk past the library on your left. What building is right next to the library?",
             correct: "Post Office",
             options: ["Post Office", "Cinema", "Museum", "Supermarket"]
         },
         {
-            instruction: "Start at the <b>START</b> point. Go straight on past the traffic lights to the roundabout. At the roundabout turn left. Go past the theatre. What building is next to the theatre?",
+            instruction: "Start at the <b>START</b> point. Go straight on past the traffic lights to the roundabout. Turn left at the roundabout. Pass the theatre. What is next to the theatre?",
             correct: "Museum",
             options: ["Museum", "Post Office", "Hospital", "Café"]
         },
         {
-            instruction: "Start at the <b>START</b> point. Go straight on. Go past the traffic lights and take the second right on to King's Road. Pass the bookshop. What is next to the bookshop?",
+            instruction: "Start at the <b>START</b> point. Go straight on. Pass the traffic lights and take the second right on to King's Road. Pass the bookshop. What building is next to it?",
             correct: "Underground Station",
             options: ["Underground Station", "Café", "Cinema", "Bus Stop"]
         },
         {
-            instruction: "Start at the <b>START</b> point. Go straight on past the traffic lights. You will see a shop on the right. What is next to the shop on the right?",
+            instruction: "Start at the <b>START</b> point. Go straight on past the traffic lights. Look at the building on your right opposite the park. What is it?",
             correct: "Supermarket",
             options: ["Supermarket", "Museum", "Hospital", "Post Office"]
         }
