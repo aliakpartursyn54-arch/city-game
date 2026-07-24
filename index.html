@@ -11,73 +11,79 @@
             --secondary: #10b981;
             --danger: #ef4444;
             --bg: #f8fafc;
-            --road: #334155;
-            --building: #ffffff;
+            --card-bg: #ffffff;
+            --text: #1e293b;
         }
 
         * {
             box-sizing: border-box;
             user-select: none;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background: var(--bg);
-            margin: 0;
+            color: var(--text);
             padding: 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
         }
 
         .game-container {
-            max-width: 980px;
+            max-width: 920px;
             width: 100%;
             background: white;
-            padding: 20px;
+            padding: 24px;
             border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            margin-top: 10px;
         }
 
         h1 {
             text-align: center;
             color: var(--primary);
-            margin: 0 0 15px 0;
+            margin-bottom: 20px;
             font-size: 28px;
+            font-weight: 800;
         }
 
         .tabs {
             display: flex;
             gap: 10px;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
         }
 
         .tab-btn {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 12px;
-            background: #e2e8f0;
-            color: #334155;
+            padding: 14px 22px;
+            border: 3px solid #cbd5e1;
+            border-radius: 14px;
+            background: white;
+            color: #475569;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 700;
             font-size: 17px;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
         }
 
         .tab-btn.active {
             background: var(--primary);
             color: white;
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            border-color: var(--primary);
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
         }
 
         .view { display: none; }
         .view.active { display: block; }
 
-        /* FLASHCARDS */
         .f-card {
             width: 100%;
-            height: 250px;
+            min-height: 260px;
             background: white;
             border: 4px solid var(--primary);
             border-radius: 20px;
@@ -86,27 +92,47 @@
             align-items: center;
             justify-content: center;
             font-size: 32px;
-            font-weight: bold;
+            font-weight: 800;
             cursor: pointer;
             text-align: center;
-            padding: 20px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+            padding: 25px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            transition: transform 0.2s, border-color 0.2s;
         }
+
+        .f-card:active { transform: scale(0.98); }
 
         .f-hint {
             font-size: 16px;
             color: #94a3b8;
-            margin-top: 15px;
-            font-weight: normal;
+            margin-top: 20px;
+            font-weight: 500;
         }
 
-        /* QUIZ */
+        .card-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
         .quiz-card { text-align: center; }
         .quiz-q {
             font-size: 26px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #1e293b;
+            font-weight: 800;
+            margin-bottom: 25px;
+            color: #0f172a;
         }
 
         .options {
@@ -117,114 +143,117 @@
 
         .opt-btn {
             padding: 18px;
-            font-size: 18px;
-            font-weight: bold;
+            font-size: 19px;
+            font-weight: 700;
             border: 3px solid #cbd5e1;
             border-radius: 16px;
             background: white;
             cursor: pointer;
             transition: all 0.2s;
+            color: #334155;
         }
 
         .opt-btn:hover { border-color: var(--primary); background: #f0f5ff; }
 
-        /* MAP MASTER */
-        .map-container {
-            width: 100%;
-            background: #cbd5e1;
-            border-radius: 20px;
-            padding: 15px;
-            border: 4px solid #475569;
-            box-sizing: border-box;
-        }
-
-        .city-map {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: repeat(3, 110px);
-            gap: 12px;
-            background: #e2e8f0;
-            padding: 12px;
-            border-radius: 16px;
-            position: relative;
-        }
-
-        .building {
-            background: var(--building);
-            border: 3px solid #64748b;
-            border-radius: 12px;
+        .map-section {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 15px;
-            color: #1e293b;
-            text-align: center;
-            padding: 5px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            gap: 20px;
         }
 
-        .building .icon { font-size: 26px; margin-bottom: 4px; }
+        .map-wrapper {
+            width: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 4px solid #334155;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            background: #e2e8f0;
+            text-align: center;
+        }
 
-        .instruction-card {
-            margin-top: 15px;
+        .map-img {
+            width: 100%;
+            height: auto;
+            max-height: 480px;
+            object-fit: contain;
+            display: block;
+            background: #ffffff;
+        }
+
+        .route-box {
+            width: 100%;
             background: #1e293b;
             color: white;
-            padding: 20px;
-            border-radius: 16px;
+            padding: 22px;
+            border-radius: 18px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        .instruction-title {
+        .route-title {
             color: #38bdf8;
             font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 8px;
+            font-weight: 800;
+            margin-bottom: 10px;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .instruction-text {
+        .route-text {
             font-size: 20px;
             line-height: 1.5;
             margin-bottom: 15px;
         }
 
-        .destination-question {
-            font-size: 20px;
-            font-weight: bold;
+        .destination-ask {
+            font-size: 22px;
+            font-weight: 800;
             color: #f59e0b;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             text-align: center;
         }
 
-        .map-options {
+        .map-answers {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
+            width: 100%;
         }
 
-        .map-opt-btn {
-            padding: 15px;
-            font-size: 18px;
-            font-weight: bold;
+        .map-ans-btn {
+            padding: 16px;
+            font-size: 19px;
+            font-weight: 800;
             background: #334155;
             color: white;
-            border: 2px solid #475569;
-            border-radius: 12px;
+            border: 3px solid #475569;
+            border-radius: 14px;
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        .map-opt-btn:hover { background: #475569; border-color: #38bdf8; }
+        .map-ans-btn:hover {
+            background: #475569;
+            border-color: #38bdf8;
+        }
 
         .feedback-banner {
+            width: 100%;
             text-align: center;
             font-size: 22px;
-            font-weight: bold;
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 10px;
+            font-weight: 800;
+            margin-top: 15px;
+            padding: 14px;
+            border-radius: 12px;
             display: none;
+        }
+
+        @media (max-width: 640px) {
+            .options, .map-answers {
+                grid-template-columns: 1fr;
+            }
+            .f-card { font-size: 24px; min-height: 200px; }
+            .route-text { font-size: 17px; }
         }
     </style>
 </head>
@@ -234,7 +263,7 @@
     <h1>Unit 5G: City & Directions Master 🧭</h1>
     
     <div class="tabs">
-        <button class="tab-btn active" onclick="showView('learn', event)">1. Flashcards (25)</button>
+        <button class="tab-btn active" onclick="showView('learn', event)">1. Flashcards (20)</button>
         <button class="tab-btn" onclick="showView('quiz', event)">2. Words Quiz</button>
         <button class="tab-btn" onclick="showView('map', event)">3. Map Navigation Game</button>
     </div>
@@ -245,10 +274,10 @@
             <div id="card-text">crossroads</div>
             <div class="f-hint">Нажми, чтобы перевернуть 🔄</div>
         </div>
-        <div style="display:flex; justify-content: space-between; align-items: center; margin-top:20px;">
-            <button class="tab-btn" onclick="changeCard(-1)">← Назад</button>
-            <div id="card-counter" style="font-size: 20px; font-weight: bold;">1 / 25</div>
-            <button class="tab-btn" onclick="changeCard(1)">Вперёд →</button>
+        <div class="card-controls">
+            <button class="nav-btn" onclick="changeCard(-1)">← Назад</button>
+            <div id="card-counter" style="font-size: 20px; font-weight: 800;">1 / 20</div>
+            <button class="nav-btn" onclick="changeCard(1)">Вперёд →</button>
         </div>
     </div>
 
@@ -260,33 +289,22 @@
         </div>
     </div>
 
-    <!-- VIEW 3: MAP MASTER -->
+    <!-- VIEW 3: MAP MASTER WITH INTERNET IMAGE MAP -->
     <div id="map" class="view">
-        <div class="map-container">
-            <!-- CITY MAP GRID -->
-            <div class="city-map">
-                <div class="building"><span class="icon">🏥</span>Hospital</div>
-                <div class="building"><span class="icon">🎬</span>Cinema</div>
-                <div class="building"><span class="icon">🏫</span>School</div>
-                <div class="building"><span class="icon">🏦</span>Bank</div>
-                
-                <div class="building"><span class="icon">🚌</span>Bus Station</div>
-                <div class="building"><span class="icon">🌳</span>Park</div>
-                <div class="building"><span class="icon">📮</span>Post Office</div>
-                <div class="building"><span class="icon">🏛️</span>Museum</div>
-
-                <div class="building"><span class="icon">🚂</span>Train Station</div>
-                <div class="building"><span class="icon">☕</span>Café</div>
-                <div class="building"><span class="icon">🛒</span>Supermarket</div>
-                <div class="building"><span class="icon">📚</span>Library</div>
+        <div class="map-section">
+            <div class="map-wrapper">
+                <!-- Direct Town Map Image from the Internet -->
+                <img src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=900&auto=format&fit=crop&q=80" 
+                     alt="City Town Map" 
+                     class="map-img" 
+                     id="city-map-img">
             </div>
 
-            <!-- INSTRUCTION & GAME SECTION -->
-            <div class="instruction-card">
-                <div class="instruction-title">📍 Route Instruction / Маршрут:</div>
-                <div class="instruction-text" id="route-text">Загрузка маршрута...</div>
-                <div class="destination-question">Where are you? / Куда ты пришёл?</div>
-                <div class="map-options" id="map-opts"></div>
+            <div class="route-box">
+                <div class="route-title">📍 Route Instruction / Маршрут:</div>
+                <div class="route-text" id="route-text">Загрузка маршрута...</div>
+                <div class="destination-ask">Where are you? / Куда ты пришёл?</div>
+                <div class="map-answers" id="map-opts"></div>
                 <div class="feedback-banner" id="feedback-banner"></div>
             </div>
         </div>
@@ -294,7 +312,6 @@
 </div>
 
 <script>
-    // ТОЛЬКО НАПРАВЛЕНИЯ, ПРЕДЛОГИ И ЭЛЕМЕНТЫ ДОРОГИ (БЕЗ ЗДАНИЙ)
     const words = [
         {en: "crossroads", ru: "перекрёсток"},
         {en: "traffic lights", ru: "светофор"},
@@ -315,39 +332,34 @@
         {en: "go under the bridge", ru: "пройти под мостом"},
         {en: "go over the bridge", ru: "пройти по мосту"},
         {en: "go past...", ru: "пройти мимо..."},
-        {en: "lamp post", ru: "фонарный столб"},
-        {en: "phone box", ru: "телефонная будка"},
-        {en: "take the first left", ru: "первый поворот налево"},
-        {en: "take the second right", ru: "второй поворот направо"},
-        {en: "turn right at traffic lights", ru: "повернуть направо на светофоре"},
-        {en: "cross the road", ru: "перейти дорогу"}
+        {en: "take the first left", ru: "первый поворот налево"}
     ];
 
     const mapRoutes = [
         {
-            instruction: "Start at the <b>Bus Station</b>. Go straight on, pass the Park. Turn right and go past the Post Office. It is next to the Post Office, opposite the Library.",
-            correct: "Museum",
-            options: ["Museum", "Bank", "Supermarket", "Cinema"]
+            instruction: "Start at the <b>Bus Station</b>. Go straight on Main Street, pass High Street and the School. Turn right at Park Avenue and go past the Hospital. What is next to the Hospital?",
+            correct: "Cinema",
+            options: ["Cinema", "Post Office", "Museum", "Café"]
         },
         {
-            instruction: "Start at the <b>Hospital</b>. Go past the Cinema. Turn right at the corner. Go past the School. What building is opposite the Café?",
-            correct: "Park",
-            options: ["Park", "Train Station", "Library", "Post Office"]
-        },
-        {
-            instruction: "Start at the <b>Train Station</b>. Walk straight on past the Café. Turn left after the Supermarket. What building is on your right, next to the Supermarket?",
-            correct: "Library",
-            options: ["Library", "Museum", "Hospital", "School"]
-        },
-        {
-            instruction: "Start at the <b>School</b>. Cross the road and go down past the Post Office. Turn right. It's between the Train Station and the Supermarket.",
+            instruction: "Start at the <b>Hospital</b>. Go down Park Avenue. Cross Main Street at the traffic lights. Walk past the Train Station. What is opposite the Train Station on the corner?",
             correct: "Café",
-            options: ["Café", "Museum", "Cinema", "Bank"]
+            options: ["Café", "Bus Station", "School", "Post Office"]
         },
         {
-            instruction: "Start at the <b>Bank</b>. Go left past the School and Cinema. Stop at the end of the road. It's next to the Cinema, above the Bus Station.",
-            correct: "Hospital",
-            options: ["Hospital", "Train Station", "Post Office", "Café"]
+            instruction: "Start at the <b>School</b>. Walk down High Street past the traffic lights. Cross Main Street. What building is on your right, next to the Café?",
+            correct: "Museum",
+            options: ["Museum", "Cinema", "Hospital", "Bus Station"]
+        },
+        {
+            instruction: "Start at the <b>Post Office</b>. Go straight up High Street, cross the pedestrian crossing. Turn left on Main Street. What building is on your right?",
+            correct: "Bus Station",
+            options: ["Bus Station", "Train Station", "Cinema", "Museum"]
+        },
+        {
+            instruction: "Start at the <b>Train Station</b>. Go up Park Avenue, turn left at the traffic lights onto Main Street. Pass the School and High Street. What building is on your left, opposite the Bus Station?",
+            correct: "Post Office",
+            options: ["Post Office", "Hospital", "Cinema", "Museum"]
         }
     ];
 
@@ -355,7 +367,6 @@
     let isFlipped = false;
     let currentRouteIndex = 0;
 
-    // View Switcher
     function showView(id, evt) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -366,21 +377,23 @@
         if(id === 'map') startMapGame();
     }
 
-    // Flashcards
     function updateCard() {
         document.getElementById('card-text').innerText = isFlipped ? words[currentCard].ru : words[currentCard].en;
         document.getElementById('card-counter').innerText = `${currentCard + 1} / ${words.length}`;
         document.getElementById('main-card').style.borderColor = isFlipped ? "var(--secondary)" : "var(--primary)";
     }
 
-    function flipCard() { isFlipped = !isFlipped; updateCard(); }
+    function flipCard() { 
+        isFlipped = !isFlipped; 
+        updateCard(); 
+    }
+
     function changeCard(dir) {
         currentCard = (currentCard + dir + words.length) % words.length;
         isFlipped = false;
         updateCard();
     }
 
-    // Quiz
     function startQuiz() {
         const qIdx = Math.floor(Math.random() * words.length);
         const q = words[qIdx];
@@ -411,7 +424,6 @@
         });
     }
 
-    // Map Master Game
     function startMapGame() {
         const route = mapRoutes[currentRouteIndex];
         document.getElementById('route-text').innerHTML = route.instruction;
@@ -425,7 +437,7 @@
 
         shuffledOpts.forEach(opt => {
             const btn = document.createElement('button');
-            btn.className = 'map-opt-btn';
+            btn.className = 'map-ans-btn';
             btn.innerText = opt;
             btn.onclick = () => checkMapAnswer(opt, route.correct);
             optsContainer.appendChild(btn);
