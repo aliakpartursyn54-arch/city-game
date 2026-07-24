@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 5G: City Navigator</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #0f172a;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            user-select: none;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            margin-top: 0;
+            font-size: 32px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            padding: 14px 28px;
+            border: 3px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Flashcard Styles */
+        .card-container {
+            perspective: 1000px;
+            width: 100%;
+            height: 280px;
+            cursor: pointer;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            border-radius: 16px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            border: 3px solid #cbd5e1;
+            background: white;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .card-front {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+            font-size: 32px;
+            background: #f0fdf4;
+            color: #166534;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 14px 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .btn:hover { background: var(--primary-dark); }
+
+        /* Quiz Styles */
+        .quiz-question {
+            font-size: 26px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .option-btn {
+            padding: 20px;
+            border: 3px solid #cbd5e1;
+            background: white;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .option-btn:hover { border-color: var(--primary); background: #eff6ff; }
+        .option-btn.correct { background: #dcfce7 !important; border-color: #22c55e !important; color: #15803d; }
+        .option-btn.wrong { background: #fee2e2 !important; border-color: #ef4444 !important; color: #b91c1c; }
+
+        /* Directions Map Challenge Styles */
+        .map-box {
+            background: #e0f2fe;
+            border: 3px dashed #0284c7;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 20px;
+            line-height: 1.6;
+        }
+
+        .score-board {
+            text-align: right;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🧭 Unit 5G: City Navigator</h1>
+
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('cards', event)">🃏 Flashcards</button>
+        <button class="tab-btn" onclick="switchTab('quiz', event)">📝 Quiz</button>
+        <button class="tab-btn" onclick="switchTab('directions', event)">🗺️ Directions Game</button>
+    </div>
+
+    <!-- FLASHCARDS SECTION -->
+    <div id="cards" class="section active">
+        <div class="card-container" onclick="flipCard()">
+            <div class="card" id="flashcard">
+                <div class="card-front" id="card-en">crossroads</div>
+                <div class="card-back" id="card-ru">перекрёсток</div>
+            </div>
+        </div>
+        <div class="controls">
+            <button class="btn" onclick="prevCard()">← Back</button>
+            <span id="card-num" style="font-size: 20px; font-weight: bold;">1 / 15</span>
+            <button class="btn" onclick="nextCard()">Next →</button>
+        </div>
+    </div>
+
+    <!-- QUIZ SECTION -->
+    <div id="quiz" class="section">
+        <div class="score-board">Score: <span id="quiz-score">0</span></div>
+        <div class="quiz-question" id="quiz-q">Loading...</div>
+        <div class="options-grid" id="quiz-options"></div>
+    </div>
+
+    <!-- DIRECTIONS GAME SECTION -->
+    <div id="directions" class="section">
+        <div class="score-board">Points: <span id="nav-score">0</span></div>
+        <div class="map-box" id="nav-instruction">Loading...</div>
+        <div style="text-align: center; font-size: 22px; font-weight: bold; margin-bottom: 15px;">Where are you?</div>
+        <div class="options-grid" id="nav-options"></div>
+    </div>
+</div>
+
+<script>
+    const vocabulary = [
+        { en: "crossroads", ru: "перекрёсток" },
+        { en: "traffic lights", ru: "светофор" },
+        { en: "pedestrian crossing", ru: "пешеходный переход" },
+        { en: "roundabout", ru: "круговая развязка" },
+        { en: "pavement", ru: "тротуар" },
+        { en: "bus shelter", ru: "автобусная остановка" },
+        { en: "cycle lane", ru: "велодорожка" },
+        { en: "go straight on", ru: "идти прямо" },
+        { en: "turn right at the crossroads", ru: "повернуть направо на перекрёстке" },
+        { en: "take the first left", ru: "повернуть на первом повороте налево" },
+        { en: "opposite", ru: "напротив" },
+        { en: "next to", ru: "рядом с" },
+        { en: "on the corner", ru: "на углу" },
+        { en: "go under the bridge", ru: "пройти под мостом" },
+        { en: "go past the bank", ru: "пройти мимо банка" }
+    ];
+
+    const directionQuestions = [
+        {
+            text: "📍 Start at Victoria Street. Go straight on, turn left at the traffic lights. Go past the cinema. What is on your corner, opposite the café?",
+            correct: "Museum",
+            options: ["Museum", "Police Station", "Library", "Swimming Pool"]
+        },
+        {
+            text: "📍 Start at the Station. Go along Kings Road. Turn right at the T-junction. Go under the bridge. It's on your right, next to the park.",
+            correct: "Café",
+            options: ["Hotel", "Café", "Hospital", "Zoo"]
+        },
+        {
+            text: "📍 You are at the Bus Station. Cross the road. Walk past the gym. Turn right at the corner. What's straight ahead?",
+            correct: "Town Hall",
+            options: ["Supermarket", "Town Hall", "Post Office", "Park"]
+        }
+    ];
+
+    function switchTab(tabId, e) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        e.target.classList.add('active');
+    }
+
+    // Flashcard Logic
+    let currentCardIndex = 0;
+    function updateCard() {
+        document.getElementById('card-en').innerText = vocabulary[currentCardIndex].en;
+        document.getElementById('card-ru').innerText = vocabulary[currentCardIndex].ru;
+        document.getElementById('card-num').innerText = `${currentCardIndex + 1} / ${vocabulary.length}`;
+        document.getElementById('flashcard').classList.remove('flipped');
+    }
+    function flipCard() {
+        document.getElementById('flashcard').classList.toggle('flipped');
+    }
+    function nextCard() {
+        currentCardIndex = (currentCardIndex + 1) % vocabulary.length;
+        updateCard();
+    }
+    function prevCard() {
+        currentCardIndex = (currentCardIndex - 1 + vocabulary.length) % vocabulary.length;
+        updateCard();
+    }
+
+    // Quiz Logic
+    let quizScore = 0;
+    let currentQuizQ = 0;
+
+    function loadQuiz() {
+        if(currentQuizQ >= vocabulary.length) {
+            document.getElementById('quiz-q').innerText = `🎉 Game Over! Final Score: ${quizScore}/${vocabulary.length}`;
+            document.getElementById('quiz-options').innerHTML = `<button class="btn" style="grid-column: span 2;" onclick="resetQuiz()">Play Again</button>`;
+            return;
+        }
+        let q = vocabulary[currentQuizQ];
+        document.getElementById('quiz-q').innerText = `Translate: "${q.en}"`;
+        
+        let opts = [q.ru];
+        while(opts.length < 4) {
+            let randRu = vocabulary[Math.floor(Math.random()*vocabulary.length)].ru;
+            if(!opts.includes(randRu)) opts.push(randRu);
+        }
+        opts.sort(() => Math.random() - 0.5);
+
+        let optsHtml = '';
+        opts.forEach(o => {
+            optsHtml += `<button class="option-btn" onclick="checkQuiz(this, '${o}', '${q.ru}')">${o}</button>`;
+        });
+        document.getElementById('quiz-options').innerHTML = optsHtml;
+    }
+
+    function checkQuiz(btn, selected, correct) {
+        let buttons = document.querySelectorAll('#quiz-options .option-btn');
+        buttons.forEach(b => b.disabled = true);
+
+        if(selected === correct) {
+            btn.classList.add('correct');
+            quizScore++;
+            document.getElementById('quiz-score').innerText = quizScore;
+        } else {
+            btn.classList.add('wrong');
+            buttons.forEach(b => { if(b.innerText === correct) b.classList.add('correct'); });
+        }
+        setTimeout(() => { currentQuizQ++; loadQuiz(); }, 1200);
+    }
+
+    function resetQuiz() {
+        quizScore = 0; currentQuizQ = 0;
+        document.getElementById('quiz-score').innerText = 0;
+        loadQuiz();
+    }
+
+    // Directions Game Logic
+    let navScore = 0;
+    let currentNavQ = 0;
+
+    function loadNav() {
+        if(currentNavQ >= directionQuestions.length) {
+            document.getElementById('nav-instruction').innerHTML = `🏆 <b>Excellent navigation!</b> You reached all destinations!`;
+            document.getElementById('nav-options').innerHTML = '';
+            return;
+        }
+        let q = directionQuestions[currentNavQ];
+        document.getElementById('nav-instruction').innerHTML = q.text;
+
+        let optsHtml = '';
+        q.options.forEach(o => {
+            optsHtml += `<button class="option-btn" onclick="checkNav(this, '${o}', '${q.correct}')">${o}</button>`;
+        });
+        document.getElementById('nav-options').innerHTML = optsHtml;
+    }
+
+    function checkNav(btn, selected, correct) {
+        if(selected === correct) {
+            btn.classList.add('correct');
+            navScore += 10;
+            document.getElementById('nav-score').innerText = navScore;
+        } else {
+            btn.classList.add('wrong');
+        }
+        setTimeout(() => { currentNavQ++; loadNav(); }, 1200);
+    }
+
+    // Init
+    updateCard();
+    loadQuiz();
+    loadNav();
+</script>
+</body>
+</html>
