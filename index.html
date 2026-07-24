@@ -10,9 +10,9 @@
             --primary-dark: #3730a3;
             --secondary: #10b981;
             --danger: #ef4444;
-            --bg: #f8fafc;
+            --bg: #f1f5f9;
             --card-bg: #ffffff;
-            --text: #1e293b;
+            --text: #0f172a;
         }
 
         * {
@@ -34,12 +34,12 @@
         }
 
         .game-container {
-            max-width: 920px;
+            max-width: 960px;
             width: 100%;
             background: white;
             padding: 24px;
             border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             margin-top: 10px;
         }
 
@@ -81,9 +81,10 @@
         .view { display: none; }
         .view.active { display: block; }
 
+        /* FLASHCARDS */
         .f-card {
             width: 100%;
-            min-height: 260px;
+            min-height: 250px;
             background: white;
             border: 4px solid var(--primary);
             border-radius: 20px;
@@ -127,6 +128,7 @@
             cursor: pointer;
         }
 
+        /* QUIZ */
         .quiz-card { text-align: center; }
         .quiz-q {
             font-size: 26px;
@@ -155,6 +157,7 @@
 
         .opt-btn:hover { border-color: var(--primary); background: #f0f5ff; }
 
+        /* MAP SECTION */
         .map-section {
             display: flex;
             flex-direction: column;
@@ -162,28 +165,25 @@
             gap: 20px;
         }
 
-        .map-wrapper {
+        .map-svg-container {
             width: 100%;
-            border-radius: 20px;
-            overflow: hidden;
-            border: 4px solid #334155;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
             background: #e2e8f0;
-            text-align: center;
+            border: 4px solid #334155;
+            border-radius: 20px;
+            padding: 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
 
-        .map-img {
+        svg.city-map {
             width: 100%;
             height: auto;
-            max-height: 480px;
-            object-fit: contain;
-            display: block;
-            background: #ffffff;
+            border-radius: 12px;
+            background: #818cf8;
         }
 
         .route-box {
             width: 100%;
-            background: #1e293b;
+            background: #0f172a;
             color: white;
             padding: 22px;
             border-radius: 18px;
@@ -208,7 +208,7 @@
         .destination-ask {
             font-size: 22px;
             font-weight: 800;
-            color: #f59e0b;
+            color: #fbbf24;
             margin-bottom: 15px;
             text-align: center;
         }
@@ -224,7 +224,7 @@
             padding: 16px;
             font-size: 19px;
             font-weight: 800;
-            background: #334155;
+            background: #1e293b;
             color: white;
             border: 3px solid #475569;
             border-radius: 14px;
@@ -233,7 +233,7 @@
         }
 
         .map-ans-btn:hover {
-            background: #475569;
+            background: #334155;
             border-color: #38bdf8;
         }
 
@@ -249,9 +249,7 @@
         }
 
         @media (max-width: 640px) {
-            .options, .map-answers {
-                grid-template-columns: 1fr;
-            }
+            .options, .map-answers { grid-template-columns: 1fr; }
             .f-card { font-size: 24px; min-height: 200px; }
             .route-text { font-size: 17px; }
         }
@@ -263,12 +261,12 @@
     <h1>Unit 5G: City & Directions Master 🧭</h1>
     
     <div class="tabs">
-        <button class="tab-btn active" onclick="showView('learn', event)">1. Flashcards (20)</button>
+        <button class="tab-btn active" onclick="showView('learn', event)">1. Flashcards (25)</button>
         <button class="tab-btn" onclick="showView('quiz', event)">2. Words Quiz</button>
         <button class="tab-btn" onclick="showView('map', event)">3. Map Navigation Game</button>
     </div>
 
-    <!-- VIEW 1: FLASHCARDS -->
+    <!-- VIEW 1: FLASHCARDS (ONLY DIRECTIONS & PREPOSITIONS) -->
     <div id="learn" class="view active">
         <div class="f-card" id="main-card" onclick="flipCard()">
             <div id="card-text">crossroads</div>
@@ -276,7 +274,7 @@
         </div>
         <div class="card-controls">
             <button class="nav-btn" onclick="changeCard(-1)">← Назад</button>
-            <div id="card-counter" style="font-size: 20px; font-weight: 800;">1 / 20</div>
+            <div id="card-counter" style="font-size: 20px; font-weight: 800;">1 / 25</div>
             <button class="nav-btn" onclick="changeCard(1)">Вперёд →</button>
         </div>
     </div>
@@ -289,15 +287,83 @@
         </div>
     </div>
 
-    <!-- VIEW 3: MAP MASTER WITH INTERNET IMAGE MAP -->
+    <!-- VIEW 3: MAP MASTER WITH HIGH-RES VECTOR CITY MAP -->
     <div id="map" class="view">
         <div class="map-section">
-            <div class="map-wrapper">
-                <!-- Direct Town Map Image from the Internet -->
-                <img src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=900&auto=format&fit=crop&q=80" 
-                     alt="City Town Map" 
-                     class="map-img" 
-                     id="city-map-img">
+            <div class="map-svg-container">
+                <svg viewBox="0 0 900 550" class="city-map">
+                    <!-- BACKGROUND GRASS / BLOCKS -->
+                    <rect x="0" y="0" width="900" height="550" fill="#a7f3d0"/>
+                    
+                    <!-- ROADS -->
+                    <!-- Main Street (Horizontal Center) -->
+                    <rect x="0" y="230" width="900" height="90" fill="#334155"/>
+                    <line x1="0" y1="275" x2="900" y2="275" stroke="#fef08a" stroke-width="4" stroke-dasharray="15,15"/>
+                    <text x="450" y="248" fill="#ffffff" font-size="16" font-weight="bold" text-anchor="middle">MAIN STREET</text>
+
+                    <!-- High Street (Vertical Left) -->
+                    <rect x="220" y="0" width="80" height="550" fill="#334155"/>
+                    <line x1="260" y1="0" x2="260" y2="550" stroke="#ffffff" stroke-width="4" stroke-dasharray="15,15"/>
+                    <text x="235" y="120" fill="#ffffff" font-size="15" font-weight="bold" transform="rotate(-90 235,120)">HIGH STREET</text>
+
+                    <!-- Park Avenue (Vertical Right) -->
+                    <rect x="600" y="0" width="80" height="550" fill="#334155"/>
+                    <line x1="640" y1="0" x2="640" y2="550" stroke="#ffffff" stroke-width="4" stroke-dasharray="15,15"/>
+                    <text x="615" y="120" fill="#ffffff" font-size="15" font-weight="bold" transform="rotate(-90 615,120)">PARK AVENUE</text>
+
+                    <!-- PEDESTRIAN CROSSINGS -->
+                    <g stroke="#ffffff" stroke-width="6">
+                        <!-- High St / Main St crossing -->
+                        <line x1="225" y1="210" x2="295" y2="210"/>
+                        <line x1="225" y1="200" x2="295" y2="200"/>
+                        <line x1="225" y1="190" x2="295" y2="190"/>
+                    </g>
+
+                    <!-- TRAFFIC LIGHTS -->
+                    <g>
+                        <!-- Traffic Light at Park Ave -->
+                        <rect x="575" y="195" width="20" height="30" rx="4" fill="#0f172a"/>
+                        <circle cx="585" cy="202" r="3" fill="#ef4444"/>
+                        <circle cx="585" cy="210" r="3" fill="#eab308"/>
+                        <circle cx="585" cy="218" r="3" fill="#22c55e"/>
+                    </g>
+
+                    <!-- BUILDINGS -->
+                    <!-- TOP ROW -->
+                    <!-- Bus Station -->
+                    <rect x="30" y="30" width="160" height="150" rx="12" fill="#38bdf8" stroke="#0284c7" stroke-width="4"/>
+                    <text x="110" y="95" fill="#0f172a" font-size="22" font-weight="900" text-anchor="middle">🚌 BUS</text>
+                    <text x="110" y="125" fill="#0f172a" font-size="20" font-weight="800" text-anchor="middle">STATION</text>
+
+                    <!-- School -->
+                    <rect x="330" y="30" width="240" height="150" rx="12" fill="#facc15" stroke="#ca8a04" stroke-width="4"/>
+                    <text x="450" y="95" fill="#0f172a" font-size="24" font-weight="900" text-anchor="middle">🏫 SCHOOL</text>
+
+                    <!-- Hospital & Cinema Block -->
+                    <rect x="710" y="20" width="160" height="90" rx="10" fill="#f43f5e" stroke="#be123c" stroke-width="4"/>
+                    <text x="790" y="70" fill="#ffffff" font-size="20" font-weight="900" text-anchor="middle">🏥 HOSPITAL</text>
+
+                    <rect x="710" y="125" width="160" height="90" rx="10" fill="#a855f7" stroke="#6b21a8" stroke-width="4"/>
+                    <text x="790" y="175" fill="#ffffff" font-size="20" font-weight="900" text-anchor="middle">🎬 CINEMA</text>
+
+                    <!-- BOTTOM ROW -->
+                    <!-- Post Office -->
+                    <rect x="30" y="350" width="160" height="160" rx="12" fill="#fb923c" stroke="#c2410c" stroke-width="4"/>
+                    <text x="110" y="420" fill="#ffffff" font-size="22" font-weight="900" text-anchor="middle">📮 POST</text>
+                    <text x="110" y="450" fill="#ffffff" font-size="20" font-weight="800" text-anchor="middle">OFFICE</text>
+
+                    <!-- Museum & Cafe Block -->
+                    <rect x="320" y="350" width="120" height="160" rx="10" fill="#94a3b8" stroke="#475569" stroke-width="4"/>
+                    <text x="380" y="435" fill="#ffffff" font-size="18" font-weight="900" text-anchor="middle">🏛️ MUSEUM</text>
+
+                    <rect x="450" y="350" width="120" height="160" rx="10" fill="#10b981" stroke="#047857" stroke-width="4"/>
+                    <text x="510" y="435" fill="#ffffff" font-size="20" font-weight="900" text-anchor="middle">☕ CAFÉ</text>
+
+                    <!-- Train Station -->
+                    <rect x="710" y="350" width="160" height="160" rx="12" fill="#6366f1" stroke="#4338ca" stroke-width="4"/>
+                    <text x="790" y="420" fill="#ffffff" font-size="22" font-weight="900" text-anchor="middle">🚂 TRAIN</text>
+                    <text x="790" y="450" fill="#ffffff" font-size="20" font-weight="800" text-anchor="middle">STATION</text>
+                </svg>
             </div>
 
             <div class="route-box">
@@ -312,6 +378,7 @@
 </div>
 
 <script>
+    // 25 WORDS & DIRECTIONS (NO BUILDINGS)
     const words = [
         {en: "crossroads", ru: "перекрёсток"},
         {en: "traffic lights", ru: "светофор"},
@@ -332,7 +399,12 @@
         {en: "go under the bridge", ru: "пройти под мостом"},
         {en: "go over the bridge", ru: "пройти по мосту"},
         {en: "go past...", ru: "пройти мимо..."},
-        {en: "take the first left", ru: "первый поворот налево"}
+        {en: "take the first left", ru: "первый поворот налево"},
+        {en: "take the second right", ru: "второй поворот направо"},
+        {en: "cross the street", ru: "перейти улицу"},
+        {en: "turn back", ru: "повернуться назад"},
+        {en: "on the left", ru: "слева"},
+        {en: "on the right", ru: "справа"}
     ];
 
     const mapRoutes = [
@@ -342,7 +414,7 @@
             options: ["Cinema", "Post Office", "Museum", "Café"]
         },
         {
-            instruction: "Start at the <b>Hospital</b>. Go down Park Avenue. Cross Main Street at the traffic lights. Walk past the Train Station. What is opposite the Train Station on the corner?",
+            instruction: "Start at the <b>Hospital</b>. Go down Park Avenue. Cross Main Street at the traffic lights. Walk past the Train Station. What building is opposite the Train Station on Main Street?",
             correct: "Café",
             options: ["Café", "Bus Station", "School", "Post Office"]
         },
@@ -451,7 +523,7 @@
         if(selected === correct) {
             feedback.style.background = "#10b981";
             feedback.style.color = "white";
-            feedback.innerText = "🎉 Correct! Вы правильно приехали в " + correct + "!";
+            feedback.innerText = "🎉 Correct! Вы отлично добрались до " + correct + "!";
             setTimeout(() => {
                 currentRouteIndex = (currentRouteIndex + 1) % mapRoutes.length;
                 startMapGame();
@@ -459,7 +531,7 @@
         } else {
             feedback.style.background = "#ef4444";
             feedback.style.color = "white";
-            feedback.innerText = "❌ Неверно! Попробуй пройти по маршруту ещё раз!";
+            feedback.innerText = "❌ Неверно! Пройди по карте ещё раз!";
         }
     }
 
