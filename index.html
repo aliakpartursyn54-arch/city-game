@@ -1,383 +1,272 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unit 5G: City & Directions Master</title>
-    <style>
-        :root {
-            --primary: #4f46e5;
-            --primary-dark: #3730a3;
-            --secondary: #10b981;
-            --danger: #ef4444;
-            --bg: #f8fafc;
-            --road: #475569;
-        }
+    * {
+        box-sizing: border-box;
+        user-select: none;
+    }
 
-        * {
-            box-sizing: border-box;
-            user-select: none;
-        }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: var(--bg);
+        margin: 0;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--bg);
-            margin: 0;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+    .game-container {
+        max-width: 980px;
+        width: 100%;
+        background: white;
+        padding: 20px;
+        border-radius: 24px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
 
-        .game-container {
-            max-width: 950px;
-            width: 100%;
-            background: white;
-            padding: 20px;
-            border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
+    h1 {
+        text-align: center;
+        color: var(--primary);
+        margin: 0 0 15px 0;
+        font-size: 28px;
+    }
 
-        h1 {
-            text-align: center;
-            color: var(--primary);
-            margin: 0 0 15px 0;
-            font-size: 28px;
-        }
+    .tabs {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
 
-        .tabs {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
+    .tab-btn {
+        padding: 12px 20px;
+        border: none;
+        border-radius: 12px;
+        background: #e2e8f0;
+        color: #334155;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 17px;
+        transition: all 0.2s;
+    }
 
-        .tab-btn {
-            padding: 14px 24px;
-            border: none;
-            border-radius: 12px;
-            background: #e2e8f0;
-            color: #334155;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 18px;
-            transition: all 0.2s;
-        }
+    .tab-btn.active {
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
 
-        .tab-btn.active {
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
-        }
+    .view { display: none; }
+    .view.active { display: block; }
 
-        .view { display: none; }
-        .view.active { display: block; }
+    /* FLASHCARDS */
+    .f-card {
+        width: 100%;
+        height: 250px;
+        background: white;
+        border: 4px solid var(--primary);
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        font-weight: bold;
+        cursor: pointer;
+        text-align: center;
+        padding: 20px;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+    }
 
-        /* FLASHCARDS */
-        .f-card {
-            width: 100%;
-            height: 260px;
-            background: white;
-            border: 4px solid var(--primary);
-            border-radius: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-size: 36px;
-            font-weight: bold;
-            cursor: pointer;
-            text-align: center;
-            padding: 20px;
-            transition: transform 0.2s;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.05);
-        }
+    .f-hint {
+        font-size: 16px;
+        color: #94a3b8;
+        margin-top: 15px;
+        font-weight: normal;
+    }
 
-        .f-card:active { transform: scale(0.98); }
+    /* QUIZ */
+    .quiz-card { text-align: center; }
+    .quiz-q {
+        font-size: 26px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #1e293b;
+    }
 
-        .f-hint {
-            font-size: 16px;
-            color: #94a3b8;
-            margin-top: 15px;
-            font-weight: normal;
-        }
+    .options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
 
-        /* QUIZ */
-        .quiz-card { text-align: center; }
-        .quiz-q {
-            font-size: 26px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #1e293b;
-        }
+    .opt-btn {
+        padding: 18px;
+        font-size: 18px;
+        font-weight: bold;
+        border: 3px solid #cbd5e1;
+        border-radius: 16px;
+        background: white;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
 
-        .options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
+    .opt-btn:hover { border-color: var(--primary); background: #f0f5ff; }
 
-        .opt-btn {
-            padding: 20px;
-            font-size: 20px;
-            font-weight: bold;
-            border: 3px solid #cbd5e1;
-            border-radius: 16px;
-            background: white;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
+    /* MAP MASTER */
+    .map-container {
+        width: 100%;
+        background: #cbd5e1;
+        border-radius: 20px;
+        padding: 15px;
+        border: 4px solid #475569;
+        box-sizing: border-box;
+    }
 
-        .opt-btn:hover { border-color: var(--primary); background: #f0f5ff; }
+    .city-map {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(3, 110px);
+        gap: 12px;
+        background: #e2e8f0;
+        padding: 12px;
+        border-radius: 16px;
+        position: relative;
+    }
 
-        /* MAP MASTER */
-        .instruction-box {
-            background: var(--primary);
-            color: white;
-            padding: 16px;
-            border-radius: 14px;
-            text-align: center;
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
-        }
+    .building {
+        background: var(--building);
+        border: 3px solid #64748b;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 15px;
+        color: #1e293b;
+        text-align: center;
+        padding: 5px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
 
-        .map-wrapper {
-            position: relative;
-            width: 100%;
-            height: 480px;
-            background: #bbf7d0; /* Grass */
-            border-radius: 20px;
-            overflow: hidden;
-            border: 6px solid #64748b;
-        }
+    .building .icon { font-size: 26px; margin-bottom: 4px; }
 
-        /* Roads Structure */
-        .road-v { position: absolute; background: var(--road); width: 90px; height: 100%; left: 50%; transform: translateX(-50%); }
-        .road-h { position: absolute; background: var(--road); width: 100%; height: 90px; top: 50%; transform: translateY(-50%); }
-        
-        .roundabout-circle {
-            position: absolute;
-            width: 140px;
-            height: 140px;
-            background: var(--road);
-            border: 12px solid #bbf7d0;
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            cursor: pointer;
-            z-index: 5;
-        }
+    .instruction-card {
+        margin-top: 15px;
+        background: #1e293b;
+        color: white;
+        padding: 20px;
+        border-radius: 16px;
+    }
 
-        /* Interactive Objects on Map */
-        .map-object {
-            position: absolute;
-            cursor: pointer;
-            transition: transform 0.2s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            z-index: 10;
-            background: rgba(255, 255, 255, 0.85);
-            padding: 6px 12px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
+    .instruction-title {
+        color: #38bdf8;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+    }
 
-        .map-object:hover { transform: scale(1.15); background: white; }
-        .map-object span { font-size: 12px; font-weight: bold; color: #334155; }
-    </style>
-</head>
-<body>
+    .instruction-text {
+        font-size: 20px;
+        line-height: 1.5;
+        margin-bottom: 15px;
+    }
 
-<div class="game-container">
-    <h1>Unit 5G: City & Directions 🏙️</h1>
-    
-    <div class="tabs">
-        <button class="tab-btn active" onclick="showView('learn', event)">1. Flashcards</button>
-        <button class="tab-btn" onclick="showView('quiz', event)">2. Words Quiz</button>
-        <button class="tab-btn" onclick="showView('map', event)">3. Map Master</button>
+    .destination-question {
+        font-size: 20px;
+        font-weight: bold;
+        color: #f59e0b;
+        margin-bottom: 12px;
+        text-align: center;
+    }
+
+    .map-options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .map-opt-btn {
+        padding: 15px;
+        font-size: 18px;
+        font-weight: bold;
+        background: #334155;
+        color: white;
+        border: 2px solid #475569;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .map-opt-btn:hover { background: #475569; border-color: #38bdf8; }
+
+    .feedback-banner {
+        text-align: center;
+        font-size: 22px;
+        font-weight: bold;
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 10px;
+        display: none;
+    }
+</style>
+
+
+<div class="tabs">
+    <button class="tab-btn active" onclick="showView('learn', event)">1. Flashcards (25)</button>
+    <button class="tab-btn" onclick="showView('quiz', event)">2. Words Quiz</button>
+    <button class="tab-btn" onclick="showView('map', event)">3. Map Navigation Game</button>
+</div>
+
+<!-- VIEW 1: FLASHCARDS -->
+<div id="learn" class="view active">
+    <div class="f-card" id="main-card" onclick="flipCard()">
+        <div id="card-text">crossroads</div>
+        <div class="f-hint">Нажми, чтобы перевернуть 🔄</div>
     </div>
-
-    <!-- VIEW 1: LEARN (FLASHCARDS) -->
-    <div id="learn" class="view active">
-        <div class="f-card" id="main-card" onclick="flipCard()">
-            <div id="card-text">crossroads</div>
-            <div class="f-hint">Нажми, чтобы перевернуть 🔄</div>
-        </div>
-        <div style="display:flex; justify-content: space-between; align-items: center; margin-top:20px;">
-            <button class="tab-btn" onclick="changeCard(-1)">← Назад</button>
-            <div id="card-counter" style="font-size: 20px; font-weight: bold;">1 / 20</div>
-            <button class="tab-btn" onclick="changeCard(1)">Вперёд →</button>
-        </div>
-    </div>
-
-    <!-- VIEW 2: QUIZ -->
-    <div id="quiz" class="view">
-        <div class="quiz-card">
-            <div class="quiz-q" id="quiz-q">Как перевести "traffic lights"?</div>
-            <div class="options" id="quiz-opts"></div>
-        </div>
-    </div>
-
-    <!-- VIEW 3: MAP MASTER -->
-    <div id="map" class="view">
-        <div class="instruction-box" id="map-instr">Найди на карте: ROUNDABOUT</div>
-        <div class="map-wrapper" id="map-area">
-            <!-- Roads -->
-            <div class="road-v"></div>
-            <div class="road-h"></div>
-            <div class="roundabout-circle" data-name="roundabout" title="Roundabout"></div>
-            
-            <!-- Objects -->
-            <div class="map-object" style="top:44%; left:47%;" data-name="roundabout">🔄<span>roundabout</span></div>
-            <div class="map-object" style="top:22%; left:56%;" data-name="traffic lights">🚦<span>traffic lights</span></div>
-            <div class="map-object" style="top:68%; left:38%;" data-name="traffic lights">🚦<span>traffic lights</span></div>
-            <div class="map-object" style="top:52%; left:18%;" data-name="pedestrian crossing">🦓<span>pedestrian crossing</span></div>
-            <div class="map-object" style="top:5%; left:42%;" data-name="bridge">🌉<span>bridge</span></div>
-            <div class="map-object" style="top:62%; left:6%;" data-name="pavement">🚶<span>pavement</span></div>
-            <div class="map-object" style="top:88%; left:58%;" data-name="cycle lane">🚲<span>cycle lane</span></div>
-            <div class="map-object" style="top:15%; left:12%;" data-name="bus shelter">🚌<span>bus shelter</span></div>
-            <div class="map-object" style="top:78%; left:82%;" data-name="bank">🏦<span>bank</span></div>
-            <div class="map-object" style="top:22%; left:82%;" data-name="cinema">🎬<span>cinema</span></div>
-            <div class="map-object" style="top:12%; left:70%;" data-name="hospital">🏥<span>hospital</span></div>
-            <div class="map-object" style="top:75%; left:15%;" data-name="post office">📮<span>post office</span></div>
-        </div>
+    <div style="display:flex; justify-content: space-between; align-items: center; margin-top:20px;">
+        <button class="tab-btn" onclick="changeCard(-1)">← Назад</button>
+        <div id="card-counter" style="font-size: 20px; font-weight: bold;">1 / 25</div>
+        <button class="tab-btn" onclick="changeCard(1)">Вперёд →</button>
     </div>
 </div>
 
-<script>
-    const words = [
-        {en: "crossroads", ru: "перекрёсток"},
-        {en: "traffic lights", ru: "светофор"},
-        {en: "pedestrian crossing", ru: "пешеходный переход"},
-        {en: "roundabout", ru: "круговая развязка"},
-        {en: "pavement", ru: "тротуар"},
-        {en: "bus shelter", ru: "автобусная остановка"},
-        {en: "cycle lane", ru: "велодорожка"},
-        {en: "go straight on", ru: "идти прямо"},
-        {en: "opposite", ru: "напротив"},
-        {en: "next to", ru: "рядом с"},
-        {en: "on the corner", ru: "на углу"},
-        {en: "go under the bridge", ru: "пройти под мостом"},
-        {en: "go past the bank", ru: "пройти мимо банка"},
-        {en: "lamp post", ru: "фонарный столб"},
-        {en: "phone box", ru: "телефонная будка"},
-        {en: "take the first left", ru: "первый поворот налево"},
-        {en: "turn right at traffic lights", ru: "повернуть направо на светофоре"},
-        {en: "cross the road", ru: "перейти дорогу"},
-        {en: "town hall", ru: "ратуша / администрация"},
-        {en: "department store", ru: "универмаг"}
-    ];
+<!-- VIEW 2: QUIZ -->
+<div id="quiz" class="view">
+    <div class="quiz-card">
+        <div class="quiz-q" id="quiz-q">Загрузка вопроса...</div>
+        <div class="options" id="quiz-opts"></div>
+    </div>
+</div>
 
-    let currentCard = 0;
-    let isFlipped = false;
+<!-- VIEW 3: MAP MASTER -->
+<div id="map" class="view">
+    <div class="map-container">
+        <!-- CITY MAP GRID -->
+        <div class="city-map">
+            <div class="building"><span class="icon">🏥</span>Hospital</div>
+            <div class="building"><span class="icon">🎬</span>Cinema</div>
+            <div class="building"><span class="icon">🏫</span>School</div>
+            <div class="building"><span class="icon">🏦</span>Bank</div>
+            
+            <div class="building"><span class="icon">🚌</span>Bus Station</div>
+            <div class="building"><span class="icon">🌳</span>Park</div>
+            <div class="building"><span class="icon">📮</span>Post Office</div>
+            <div class="building"><span class="icon">🏛️</span>Museum</div>
 
-    // View Switcher
-    function showView(id, evt) {
-        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        if(evt && evt.target) evt.target.classList.add('active');
-        
-        if(id === 'quiz') startQuiz();
-        if(id === 'map') startMapGame();
-    }
+            <div class="building"><span class="icon">🚂</span>Train Station</div>
+            <div class="building"><span class="icon">☕</span>Café</div>
+            <div class="building"><span class="icon">🛒</span>Supermarket</div>
+            <div class="building"><span class="icon">📚</span>Library</div>
+        </div>
 
-    // Flashcards
-    function updateCard() {
-        document.getElementById('card-text').innerText = isFlipped ? words[currentCard].ru : words[currentCard].en;
-        document.getElementById('card-counter').innerText = `${currentCard + 1} / ${words.length}`;
-        document.getElementById('main-card').style.borderColor = isFlipped ? "var(--secondary)" : "var(--primary)";
-    }
-
-    function flipCard() { isFlipped = !isFlipped; updateCard(); }
-    function changeCard(dir) {
-        currentCard = (currentCard + dir + words.length) % words.length;
-        isFlipped = false;
-        updateCard();
-    }
-
-    // Quiz
-    function startQuiz() {
-        const qIdx = Math.floor(Math.random() * words.length);
-        const q = words[qIdx];
-        document.getElementById('quiz-q').innerText = `Translate: "${q.en}"`;
-        
-        let opts = [q.ru];
-        while(opts.length < 4) {
-            let r = words[Math.floor(Math.random()*words.length)].ru;
-            if(!opts.includes(r)) opts.push(r);
-        }
-        opts.sort(() => Math.random() - 0.5);
-
-        const grid = document.getElementById('quiz-opts');
-        grid.innerHTML = '';
-        opts.forEach(o => {
-            const b = document.createElement('button');
-            b.className = 'opt-btn';
-            b.innerText = o;
-            b.onclick = () => {
-                if(o === q.ru) {
-                    b.style.background = "#10b981"; b.style.color = "white"; b.style.borderColor = "#10b981";
-                    setTimeout(startQuiz, 1000);
-                } else {
-                    b.style.background = "#ef4444"; b.style.color = "white"; b.style.borderColor = "#ef4444";
-                }
-            };
-            grid.appendChild(b);
-        });
-    }
-
-    // Map Master
-    const mapTasks = [
-        {name: "roundabout", label: "ROUNDABOUT (Круговая развязка)"},
-        {name: "traffic lights", label: "TRAFFIC LIGHTS (Светофор)"},
-        {name: "pedestrian crossing", label: "PEDESTRIAN CROSSING (Переход)"},
-        {name: "bridge", label: "BRIDGE (Мост)"},
-        {name: "bus shelter", label: "BUS SHELTER (Остановка)"},
-        {name: "cycle lane", label: "CYCLE LANE (Велодорожка)"},
-        {name: "bank", label: "BANK (Банк)"},
-        {name: "cinema", label: "CINEMA (Кинотеатр)"},
-        {name: "hospital", label: "HOSPITAL (Больница)"},
-        {name: "post office", label: "POST OFFICE (Почта)"}
-    ];
-    let currentMapTask = 0;
-
-    function startMapGame() {
-        currentMapTask = 0;
-        nextMapTask();
-        
-        document.querySelectorAll('.map-object, .roundabout-circle').forEach(obj => {
-            obj.onclick = (e) => {
-                e.stopPropagation();
-                if(obj.dataset.name === mapTasks[currentMapTask].name) {
-                    currentMapTask++;
-                    if(currentMapTask < mapTasks.length) {
-                        nextMapTask();
-                    } else {
-                        document.getElementById('map-instr').innerText = "🎉 Молодцы! Все объекты найдены!";
-                        document.getElementById('map-instr').style.background = "var(--secondary)";
-                    }
-                } else {
-                    document.getElementById('map-instr').style.background = "var(--danger)";
-                    setTimeout(() => {
-                        document.getElementById('map-instr').style.background = "var(--primary)";
-                    }, 500);
-                }
-            };
-        });
-    }
-
-    function nextMapTask() {
-        document.getElementById('map-instr').innerText = `Найди: ${mapTasks[currentMapTask].label}`;
-    }
-
-    updateCard();
-</script>
-</body>
-</html>
+        <!-- INSTRUCTION & GAME SECTION -->
+        <div class="instruction-card">
+            <div class="instruction-title">📍 Route Instruction / Маршрут:</div>
+            <div class="instruction-text" id="route-text">Загрузка маршрута...</div>
+            <div class="destination-question">Where are you? / Куда ты пришёл?</div>
+            <div class="map-options" id="map-opts"></div>
+            <div class="feedback-banner" id="feedback-banner"></div>
+        </div>
+    </div>
+</div>
